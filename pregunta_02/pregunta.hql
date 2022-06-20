@@ -30,7 +30,7 @@ LOAD DATA LOCAL INPATH "data.tsv" INTO TABLE data;
 
 CREATE TABLE data_count AS
     SELECT *
-    FROM data ORDER BY letter, value;
+    FROM data ORDER BY letter, value, birthday;
 
 INSERT OVERWRITE LOCAL DIRECTORY 'output'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
