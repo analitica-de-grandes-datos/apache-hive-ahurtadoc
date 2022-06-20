@@ -46,3 +46,16 @@ LOAD DATA LOCAL INPATH 'data1.csv' INTO TABLE tbl1;
     >>> Escriba su respuesta a partir de este punto <<<
 */
 
+DROP TABLE IF EXISTS joined_values;
+
+CREATE TABLE joined_values AS SELECT tbl0.c1 as id, tbl0.c2 as letter, tbl1.c4 as list_maps 
+FROM tbl0 JOIN tbl1 ON tbl0.c1 = tbl1.c1; 
+
+DROP TABLE IF EXISTS result;
+CREATE TABLE result AS SELECT id, letter, key, value 
+FROM joined_values LATERAL VIEW explode(list_maps) exploded AS key, value; 
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+MAP KEYS TERMINATED BY '#'
+SELECT id, letter, value FROM result WHERE key = letter;
